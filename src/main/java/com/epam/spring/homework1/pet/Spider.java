@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(3)
-public class Spider implements Animal{
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName();
-    }
+public class Spider implements Animal {
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName();
+  }
 }

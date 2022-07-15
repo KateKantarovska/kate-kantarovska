@@ -7,12 +7,12 @@ import java.util.List;
 
 @Component
 public class Pet {
-    @Autowired
-    List<Animal> animalList;
+  @Autowired
+  private List<Animal> animalList;
 
-    public void printPets() {
-        for (var animal : animalList) {
-            System.out.println(animal);
-        }
+  public void printPets() {
+    for (var animal : animalList) {
+      System.out.println(animal);
     }
+  }
 }
