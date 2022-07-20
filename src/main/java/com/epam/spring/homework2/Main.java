@@ -6,17 +6,16 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
-    public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanConfig1.class);
-        for (var beanName : context.getBeanDefinitionNames()) {
-            BeanDefinition beanDefinition = context.getBeanDefinition(beanName);
-            System.out.println("Bean name: " + beanName);
-            System.out.println(beanName + " definition: " + beanDefinition);
-            if (context.getBean(beanName) instanceof GenericBean) {
-                GenericBean bean = (GenericBean)context.getBean(beanName);
-                System.out.println("name: " + bean.getName() + ", value: " + bean.getValue());
-            }
-        }
-        context.close();
+  public static void main(String[] args) {
+    AnnotationConfigApplicationContext context =
+        new AnnotationConfigApplicationContext(BeanConfig1.class);
+    for (var beanDefinitionName : context.getBeanDefinitionNames()) {
+      BeanDefinition beanDefinition = context.getBeanDefinition(beanDefinitionName);
+      System.out.println(beanDefinitionName + " definition: " + beanDefinition);
+      if (context.getBean(beanDefinitionName) instanceof GenericBean bean) {
+        System.out.println("name: " + bean.getName() + ", value: " + bean.getValue());
+      }
     }
+    context.close();
+  }
 }
