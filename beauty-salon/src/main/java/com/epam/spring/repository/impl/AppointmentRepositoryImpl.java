@@ -1,13 +1,15 @@
 package com.epam.spring.repository.impl;
 
+import com.epam.spring.exception.EntityNotFoundException;
 import com.epam.spring.model.Appointment;
+import com.epam.spring.model.EntityName;
 import com.epam.spring.repository.AppointmentRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class AppointmentRepositoryImpl implements AppointmentRepository {
   private final List<Appointment> list = new ArrayList<>();
 
@@ -22,7 +24,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     return list.stream()
         .filter(appointment -> appointment.getId().equals(id))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("appointment has not been found"));
+        .orElseThrow(() -> new EntityNotFoundException(EntityName.APPOINTMENT));
   }
 
   @Override
@@ -54,7 +56,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     if (isDeleted) {
       list.add(appointment);
     } else {
-      throw new RuntimeException("appointment has not been found");
+      throw new EntityNotFoundException(EntityName.APPOINTMENT);
     }
     return appointment;
   }

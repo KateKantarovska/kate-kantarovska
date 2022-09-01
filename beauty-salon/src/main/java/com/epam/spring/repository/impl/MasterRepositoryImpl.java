@@ -1,13 +1,15 @@
 package com.epam.spring.repository.impl;
 
+import com.epam.spring.exception.EntityNotFoundException;
+import com.epam.spring.model.EntityName;
 import com.epam.spring.model.Master;
 import com.epam.spring.repository.MasterRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class MasterRepositoryImpl implements MasterRepository {
   private final List<Master> list = new ArrayList<>();
 
@@ -22,7 +24,7 @@ public class MasterRepositoryImpl implements MasterRepository {
     return list.stream()
         .filter(master -> master.getEmail().equals(email))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Master has not been found"));
+        .orElseThrow(() -> new EntityNotFoundException(EntityName.MASTER));
   }
 
   @Override
@@ -30,7 +32,7 @@ public class MasterRepositoryImpl implements MasterRepository {
     return list.stream()
         .filter(master -> master.getId().equals(id))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Master has not been found"));
+        .orElseThrow(() -> new EntityNotFoundException(EntityName.MASTER));
   }
 
   @Override

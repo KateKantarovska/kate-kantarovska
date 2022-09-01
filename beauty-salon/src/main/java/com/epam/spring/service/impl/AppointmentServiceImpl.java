@@ -58,10 +58,12 @@ public class AppointmentServiceImpl implements AppointmentService {
   public List<AppointmentDto> listAppointmentsByMasterId(Integer masterId, String status) {
     log.info("list appointments with status {} for master with id {}", status, masterId);
     List<Appointment> appointmentList = appointmentRepository.listAppointmentsByMasterId(masterId);
-    appointmentList =
-        appointmentList.stream()
-            .filter(appointment -> appointment.getStatus().equals(status))
-            .toList();
+    if (status != null) {
+      appointmentList =
+          appointmentList.stream()
+              .filter(appointment -> appointment.getStatus().equals(status))
+              .toList();
+    }
     return AppointmentMapper.INSTANCE.mapAppointmentListToAppointmentDtoList(appointmentList);
   }
 
@@ -108,9 +110,9 @@ public class AppointmentServiceImpl implements AppointmentService {
   }
 
   @Override
-  public AppointmentDto completeAppointment(Integer masterId, Integer appointmentId) {
-    log.info("mark appointment with id {} as completed (master with id {})", appointmentId, masterId);
-    Appointment appointment = appointmentRepository.getAppointmentById(appointmentId);
+  public AppointmentDto completeAppointment(Integer id) {
+    log.info("mark appointment with id {} as completed", id);
+    Appointment appointment = appointmentRepository.getAppointmentById(id);
     appointment.setStatus(AppointmentStatus.COMPLETED);
     appointmentRepository.updateAppointment(appointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);

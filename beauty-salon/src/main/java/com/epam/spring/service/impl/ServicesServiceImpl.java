@@ -33,7 +33,7 @@ public class ServicesServiceImpl implements ServicesService {
 
   @Override
   public List<ServiceDto> listServices(String filterBy, Integer id) {
-    log.info("get all services");
+    log.info("get list of services");
     var serviceList = serviceRepository.listServices();
     if (filterBy != null) {
       serviceList = switch (filterBy) {

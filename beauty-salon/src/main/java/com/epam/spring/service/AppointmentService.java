@@ -22,5 +22,5 @@ public interface AppointmentService {
 
   AppointmentDto finishAppointment(Integer id);
 
-  AppointmentDto completeAppointment(Integer masterId, Integer appointmentId);
+  AppointmentDto completeAppointment(Integer id);
 }

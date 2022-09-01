@@ -1,13 +1,15 @@
 package com.epam.spring.repository.impl;
 
+import com.epam.spring.exception.EntityNotFoundException;
 import com.epam.spring.model.Client;
+import com.epam.spring.model.EntityName;
 import com.epam.spring.repository.ClientRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class ClientRepositoryImpl implements ClientRepository {
   private final List<Client> list = new ArrayList<>();
 
@@ -22,7 +24,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     return list.stream()
         .filter(client -> client.getEmail().equals(email))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Client has not been found"));
+        .orElseThrow(() -> new EntityNotFoundException(EntityName.CLIENT));
   }
 
   @Override
@@ -30,7 +32,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     return list.stream()
         .filter(client -> client.getId().equals(id))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Client has not been found"));
+        .orElseThrow(() -> new EntityNotFoundException(EntityName.CLIENT));
   }
 
   @Override
@@ -39,7 +41,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     if (isDeleted) {
       list.add(client);
     } else {
-      throw new RuntimeException("User is not found!");
+      throw new EntityNotFoundException(EntityName.CLIENT);
     }
     return client;
   }
