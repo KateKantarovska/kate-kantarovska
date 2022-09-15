@@ -1,10 +1,26 @@
 package com.epam.spring.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "admins")
+@Getter
+@Setter
+@ToString
 @SuperBuilder
-public class Admin extends User {}
+@NoArgsConstructor
+public class Admin extends User {
+  @Override
+  public boolean equals(Object o) {
+    return super.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+}

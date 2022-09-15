@@ -17,6 +17,7 @@ import java.util.List;
 public class MasterDto extends UserDto {
   @Min(value = 0)
   @Max(value = 5)
-  private Double rating;
+  private Float rating;
+
   private List<Category> categoryList;
 }

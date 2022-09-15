@@ -34,7 +34,7 @@ public class ServiceController {
       required = true,
       value = "service id")
   @ResponseStatus(HttpStatus.OK)
-  @GetMapping(value = "service/{id}")
+  @GetMapping(value = "/service/{id}")
   ServiceDto getServiceById(@PathVariable Integer id) {
     return servicesService.getService(id);
   }

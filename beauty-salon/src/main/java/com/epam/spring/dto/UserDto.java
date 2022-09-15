@@ -19,17 +19,23 @@ public abstract class UserDto implements Serializable {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   protected Integer id;
-  @Email
+
+  @Email(groups = OnCreate.class)
   protected String email;
-  @NotBlank
+
+  @NotBlank(groups = OnCreate.class)
   protected String password;
-  @PhoneNumber
+
+  @PhoneNumber(groups = OnCreate.class)
   protected String phoneNumber;
-  @NotNull
+
+  @NotNull(groups = OnCreate.class)
   @Size(min = 3, max = 30)
   protected String name;
-  @NotNull
+
+  @NotNull(groups = OnCreate.class)
   @Size(min = 3, max = 30)
   protected String surname;
+
   protected Boolean active;
 }

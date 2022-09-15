@@ -1,13 +1,6 @@
 package com.epam.spring.repository;
 
 import com.epam.spring.model.Client;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClientRepository {
-  Client createClient(Client client);
-
-  Client getClient(String email);
-
-  Client getClient(Integer id);
-
-  Client updateClient(Client client, Integer id);
-}
+public interface ClientRepository extends JpaRepository<Client, Integer> {}

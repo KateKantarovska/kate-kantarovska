@@ -7,3 +7,16 @@ management:
     health:
       show-details: always
 
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/belle_beauty_salon
+    username: root
+    password: 1111
+    driver-class-name: com.mysql.cj.jdbc.Driver

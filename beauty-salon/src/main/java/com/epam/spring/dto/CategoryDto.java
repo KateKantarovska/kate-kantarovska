@@ -20,7 +20,7 @@ public class CategoryDto {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   private Integer id;
-  @NotBlank
-  private String name;
+
+  @NotBlank private String name;
   private List<ServiceDto> services;
 }

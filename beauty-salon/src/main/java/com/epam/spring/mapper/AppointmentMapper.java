@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {ServiceMapper.class, MasterMapper.class})
 public interface AppointmentMapper {
   AppointmentMapper INSTANCE = Mappers.getMapper(AppointmentMapper.class);
 

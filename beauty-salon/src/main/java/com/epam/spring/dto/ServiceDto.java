@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,11 +20,8 @@ public class ServiceDto {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   private Integer id;
-  @NotNull
-  private CategoryDto category;
-  @NotBlank
-  private String name;
-  @Positive
-  private Integer price;
-  private List<MasterDto> mastersList;
+
+  @NotNull private CategoryDto category;
+  @NotBlank private String name;
+  @Positive private Integer price;
 }

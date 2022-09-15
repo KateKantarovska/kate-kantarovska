@@ -2,11 +2,14 @@ package com.epam.spring.service.impl;
 
 import com.epam.spring.dto.AppointmentDto;
 import com.epam.spring.dto.ClientDto;
+import com.epam.spring.exception.EntityNotFoundException;
 import com.epam.spring.mapper.AppointmentMapper;
 import com.epam.spring.mapper.ClientMapper;
 import com.epam.spring.model.Appointment;
+import com.epam.spring.model.EntityName;
 import com.epam.spring.model.constants.AppointmentStatus;
 import com.epam.spring.repository.AppointmentRepository;
+import com.epam.spring.repository.dao.AppointmentDao;
 import com.epam.spring.service.AppointmentService;
 import com.epam.spring.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
   private final AppointmentRepository appointmentRepository;
+  private final AppointmentDao appointmentDao;
   private final ClientService clientService;
 
   @Override
@@ -27,7 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     log.info("create appointment {} {}", appointmentDto.getDate(), appointmentDto.getTimeslot());
     Appointment appointment =
         AppointmentMapper.INSTANCE.mapAppointmentDtoToAppointment(appointmentDto);
-    appointment = appointmentRepository.createAppointment(appointment);
+    appointment = appointmentRepository.save(appointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
 
@@ -36,28 +40,31 @@ public class AppointmentServiceImpl implements AppointmentService {
     log.info("update appointment with id {}", id);
     Appointment appointment =
         AppointmentMapper.INSTANCE.mapAppointmentDtoToAppointment(appointmentDto);
-    appointment = appointmentRepository.updateAppointment(appointment);
+    appointment = appointmentRepository.save(appointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
 
   @Override
   public AppointmentDto getAppointmentById(Integer id) {
     log.info("get appointment by id {}", id);
-    Appointment appointment = appointmentRepository.getAppointmentById(id);
+    Appointment appointment =
+        appointmentRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(EntityName.APPOINTMENT));
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
 
   @Override
   public List<AppointmentDto> listAppointmentsByStatus(String status) {
     log.info("list appointments with status \"{}\"", status);
-    List<Appointment> appointmentList = appointmentRepository.listAppointmentsByStatus(status);
+    List<Appointment> appointmentList = appointmentRepository.findAllByStatus(status);
     return AppointmentMapper.INSTANCE.mapAppointmentListToAppointmentDtoList(appointmentList);
   }
 
   @Override
   public List<AppointmentDto> listAppointmentsByMasterId(Integer masterId, String status) {
     log.info("list appointments with status {} for master with id {}", status, masterId);
-    List<Appointment> appointmentList = appointmentRepository.listAppointmentsByMasterId(masterId);
+    List<Appointment> appointmentList = appointmentRepository.findAllByMasterId(masterId);
     if (status != null) {
       appointmentList =
           appointmentList.stream()
@@ -71,40 +78,49 @@ public class AppointmentServiceImpl implements AppointmentService {
   public List<AppointmentDto> listFreeAppointmentsByService(Integer serviceId) {
     log.info("list free appointments for service with id {}", serviceId);
     List<Appointment> appointmentList =
-        appointmentRepository.listFreeAppointmentsByService(serviceId);
+        appointmentDao.findAllAppointmentsByStatusFreeAndServiceId(serviceId);
     return AppointmentMapper.INSTANCE.mapAppointmentListToAppointmentDtoList(appointmentList);
   }
 
   @Override
-  public AppointmentDto rescheduleAppointment(Integer newAppointmentId, Integer id) {
-    log.info("reschedule appointment with id {}", id);
-    Appointment currentAppointment = appointmentRepository.getAppointmentById(id);
-    cancelAppointment(id);
-    Appointment newAppointment = appointmentRepository.getAppointmentById(newAppointmentId);
+  public AppointmentDto rescheduleAppointment(
+      Integer newAppointmentId, Integer currentAppointmentId) {
+    log.info("reschedule appointment with id {}", currentAppointmentId);
+    Appointment currentAppointment =
+        appointmentRepository
+            .findById(currentAppointmentId)
+            .orElseThrow(() -> new EntityNotFoundException(EntityName.APPOINTMENT));
+    cancelAppointment(currentAppointmentId);
+    Appointment newAppointment =
+        appointmentRepository
+            .findById(newAppointmentId)
+            .orElseThrow(() -> new EntityNotFoundException(EntityName.APPOINTMENT));
     newAppointment.setStatus(AppointmentStatus.BOOKED);
     newAppointment.setService(currentAppointment.getService());
     newAppointment.setClient(currentAppointment.getClient());
-    newAppointment = appointmentRepository.updateAppointment(newAppointment);
+    newAppointment = appointmentRepository.save(newAppointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(newAppointment);
   }
 
   @Override
   public AppointmentDto cancelAppointment(Integer id) {
     log.info("cancel appointment with id {}", id);
-    Appointment appointment = appointmentRepository.getAppointmentById(id);
+    Appointment appointment =
+        appointmentRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(EntityName.APPOINTMENT));
     appointment.setStatus(AppointmentStatus.FREE);
     appointment.setService(null);
     appointment.setClient(null);
-    appointmentRepository.updateAppointment(appointment);
+    appointmentRepository.save(appointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
 
   @Override
   public AppointmentDto finishAppointment(Integer id) {
     log.info("finish appointment with id {}", id);
-    Appointment appointment = appointmentRepository.getAppointmentById(id);
-    appointment.setStatus(AppointmentStatus.FINISHED);
-    appointmentRepository.updateAppointment(appointment);
+    Appointment appointment =
+        appointmentDao.updateAppointmentStatus(id, AppointmentStatus.FINISHED);
     deductClientPaymentForService(appointment);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
@@ -112,9 +128,8 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Override
   public AppointmentDto completeAppointment(Integer id) {
     log.info("mark appointment with id {} as completed", id);
-    Appointment appointment = appointmentRepository.getAppointmentById(id);
-    appointment.setStatus(AppointmentStatus.COMPLETED);
-    appointmentRepository.updateAppointment(appointment);
+    Appointment appointment =
+        appointmentDao.updateAppointmentStatus(id, AppointmentStatus.COMPLETED);
     return AppointmentMapper.INSTANCE.mapAppointmentToAppointmentDto(appointment);
   }
 

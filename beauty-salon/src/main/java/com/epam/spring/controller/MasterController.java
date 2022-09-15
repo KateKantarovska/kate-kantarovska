@@ -4,6 +4,7 @@ import com.epam.spring.dto.MasterDto;
 import com.epam.spring.dto.group.OnCreate;
 import com.epam.spring.service.MasterService;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,15 @@ public class MasterController {
   }
 
   @ApiOperation("Get a list of masters (sorted by name or rating)")
-  @ApiImplicitParam(name = "sortBy", paramType = "query", value = "sorting parameter")
+  @ApiImplicitParams({
+    @ApiImplicitParam(name = "sortBy", paramType = "query", value = "sorting parameter"),
+    @ApiImplicitParam(name = "page", paramType = "query", value = "page number")
+  })
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/masters")
-  public List<MasterDto> listAllMasters(@RequestParam(defaultValue = "name") String sortBy) {
-    return masterService.listMasters(sortBy);
+  public List<MasterDto> listAllMasters(
+      @RequestParam(defaultValue = "name") String sortBy,
+      @RequestParam(defaultValue = "1") Integer page) {
+    return masterService.listMasters(sortBy, page - 1);
   }
 }

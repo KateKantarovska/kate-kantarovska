@@ -1,13 +1,6 @@
 package com.epam.spring.repository;
 
 import com.epam.spring.model.Service;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface ServiceRepository {
-  Service createService(Service service);
-
-  Service getService(Integer id);
-
-  List<Service> listServices();
-}
+public interface ServiceRepository extends JpaRepository<Service, Integer> {}

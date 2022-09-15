@@ -1,19 +1,12 @@
 package com.epam.spring.repository;
 
 import com.epam.spring.model.Appointment;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AppointmentRepository {
-  Appointment createAppointment(Appointment appointment);
+public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+  List<Appointment> findAllByStatus(String status);
 
-  Appointment getAppointmentById(Integer id);
-
-  Appointment updateAppointment(Appointment appointment);
-
-  List<Appointment> listAppointmentsByStatus(String status);
-
-  List<Appointment> listAppointmentsByMasterId(Integer masterId);
-
-  List<Appointment> listFreeAppointmentsByService(Integer serviceId);
+  List<Appointment> findAllByMasterId(Integer masterId);
 }

@@ -5,6 +5,8 @@ import com.epam.spring.model.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface ReviewMapper {
   ReviewMapper INSTANCE = Mappers.getMapper(ReviewMapper.class);
@@ -12,4 +14,6 @@ public interface ReviewMapper {
   Review mapReviewDtoToReview(ReviewDto reviewDto);
 
   ReviewDto mapReviewToReviewDto(Review review);
+
+  List<ReviewDto> mapReviewListToReviewDtoList(List<Review> reviewList);
 }

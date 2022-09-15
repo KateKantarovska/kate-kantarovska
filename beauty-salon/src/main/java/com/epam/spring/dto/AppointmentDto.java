@@ -15,15 +15,11 @@ public class AppointmentDto {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   private Integer id;
-  @NotNull
-  private ServiceDto service;
-  @NotNull
-  private MasterDto master;
-  @FutureOrPresent
-  private LocalDate date;
-  @NotNull
-  private LocalTime timeslot;
-  @NotBlank
+
+  @NotNull private ServiceDto service;
+  @NotNull private MasterDto master;
+  @FutureOrPresent private LocalDate date;
+  @NotNull private LocalTime timeslot;
   private String status;
   private ClientDto client;
 }

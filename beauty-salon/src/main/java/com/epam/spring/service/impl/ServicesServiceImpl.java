@@ -1,7 +1,9 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.dto.*;
+import com.epam.spring.exception.EntityNotFoundException;
 import com.epam.spring.mapper.ServiceMapper;
+import com.epam.spring.model.EntityName;
 import com.epam.spring.repository.ServiceRepository;
 import com.epam.spring.service.ServicesService;
 import lombok.RequiredArgsConstructor;
@@ -20,28 +22,29 @@ public class ServicesServiceImpl implements ServicesService {
   public ServiceDto createService(ServiceDto serviceDto) {
     log.info("create service with name {}", serviceDto.getName());
     var service = ServiceMapper.INSTANCE.mapServiceDtoToService(serviceDto);
-    service = serviceRepository.createService(service);
+    service = serviceRepository.save(service);
     return ServiceMapper.INSTANCE.mapServiceToServiceDto(service);
   }
 
   @Override
   public ServiceDto getService(Integer id) {
     log.info("get service with id {}", id);
-    var service = serviceRepository.getService(id);
+    var service = serviceRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(EntityName.SERVICE));
     return ServiceMapper.INSTANCE.mapServiceToServiceDto(service);
   }
 
   @Override
   public List<ServiceDto> listServices(String filterBy, Integer id) {
     log.info("get list of services");
-    var serviceList = serviceRepository.listServices();
+    var serviceList = serviceRepository.findAll();
     if (filterBy != null) {
       serviceList = switch (filterBy) {
         case "master" ->
               serviceList.stream()
                   .filter(
                       service ->
-                          service.getMastersList().stream()
+                          service.getCategory().getMasters().stream()
                               .anyMatch(master -> master.getId().equals(id)))
                   .toList();
         case "category" ->

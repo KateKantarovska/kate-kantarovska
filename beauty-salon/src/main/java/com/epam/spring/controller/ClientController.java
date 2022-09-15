@@ -45,7 +45,7 @@ public class ClientController {
       required = true,
       value = "client id")
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/{id}")
+  @PatchMapping(value = "/{id}")
   public ClientDto updateClient(
       @Validated(OnUpdate.class) @RequestBody ClientDto clientDto, @PathVariable Integer id) {
     return clientService.updateClient(clientDto, id);
