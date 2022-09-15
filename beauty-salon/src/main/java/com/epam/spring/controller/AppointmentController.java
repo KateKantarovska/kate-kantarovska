@@ -106,7 +106,7 @@ public class AppointmentController {
         value = "new appointment id")
   })
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/appointment/{id}/reschedule")
+  @PatchMapping(value = "/appointment/{id}/reschedule")
   public AppointmentDto rescheduleAppointment(
       @RequestBody Integer newAppointmentId, @PathVariable Integer id) {
     return appointmentService.rescheduleAppointment(newAppointmentId, id);
@@ -120,7 +120,7 @@ public class AppointmentController {
       required = true,
       value = "appointment id")
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/appointment/{id}/cancel")
+  @PatchMapping(value = "/appointment/{id}/cancel")
   public AppointmentDto cancelAppointment(@PathVariable Integer id) {
     return appointmentService.cancelAppointment(id);
   }
@@ -133,7 +133,7 @@ public class AppointmentController {
       required = true,
       value = "appointment id")
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/appointment/{id}/finish")
+  @PatchMapping(value = "/appointment/{id}/finish")
   public AppointmentDto finishAppointment(@PathVariable Integer id) {
     return appointmentService.finishAppointment(id);
   }
@@ -146,7 +146,7 @@ public class AppointmentController {
       required = true,
       value = "appointment id")
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/appointment/{id}/complete")
+  @PatchMapping(value = "/appointment/{id}/complete")
   public AppointmentDto completeAppointment(@PathVariable Integer id) {
     return appointmentService.completeAppointment(id);
   }
